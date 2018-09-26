@@ -1,0 +1,30 @@
+PODS:
+  - React (0.57.1):
+    - React/Core (= 0.57.1)
+  - react-native-document-picker (2.1.0):
+    - React
+  - React/Core (0.57.1):
+    - yoga (= 0.57.1.React)
+  - yoga (0.57.1.React)
+
+DEPENDENCIES:
+  - React (from `../node_modules/react-native`)
+  - react-native-document-picker (from `../node_modules/react-native-document-picker`)
+  - yoga (from `../node_modules/react-native/ReactCommon/yoga`)
+
+EXTERNAL SOURCES:
+  React:
+    :path: "../node_modules/react-native"
+  react-native-document-picker:
+    :path: "../node_modules/react-native-document-picker"
+  yoga:
+    :path: "../node_modules/react-native/ReactCommon/yoga"
+
+SPEC CHECKSUMS:
+  React: 1fe0eb13d90b625d94c3b117c274dcfd2e760e11
+  react-native-document-picker: e7934f6a3c898a1b62fa68b1f09371beef6ac51a
+  yoga: b1ce48b6cf950b98deae82838f5173ea7cf89e85
+
+PODFILE CHECKSUM: e0054d4773c90ce31d3bff88468f20361d173b1a
+
+COCOAPODS: 1.5.3

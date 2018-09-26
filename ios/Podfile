@@ -1,0 +1,16 @@
+
+
+# Uncomment the next line to define a global platform for your project
+platform :ios, '9.0'
+
+target 'DocPickerPro' do
+  # use_frameworks!
+  pod 'react-native-document-picker', :path => '../node_modules/react-native-document-picker'
+  pod 'React', :path => '../node_modules/react-native'
+  pod 'yoga', :path => '../node_modules/react-native/ReactCommon/yoga'
+
+  pod 'RNReactNativeDocViewer', :path => '../node_modules/react-native-doc-viewer'
+
+  pod 'RNFS', :path => '../node_modules/react-native-fs'
+
+end
