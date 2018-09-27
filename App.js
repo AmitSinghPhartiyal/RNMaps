@@ -34,58 +34,76 @@ export default class App extends Component {
     this.state = {
       startAddress: "Your pickup location?",
       region: null,
-      lastLat: null,
-      lastLong: null
+      originLatitude: 0,
+      originLongitude: 0,
+      latitude: 37.78825,
+      longitude: -122.4324,
+      error: null
     };
   }
+  // componentDidMount() {
+  //   //Get new coordinated on location change.
+  //   this.watchID = navigator.geolocation.watchPosition(
+  //     position => {
+  //       // const { coordinate, routeCoordinates, distanceTravelled } =   this.state;
+  //       const { latitude, longitude } = position.coords;
+
+  //       const newCoordinate = {
+  //         latitude,
+  //         longitude
+  //       };
+  //       if (Platform.OS === "android") {
+  //         if (this.marker) {
+  //           this.marker._component.animateMarkerToCoordinate(
+  //             newCoordinate,
+  //             500
+  //           );
+  //         }
+  //       } else {
+  //         coordinate.timing(newCoordinate).start();
+  //       }
+  //       this.setState({
+  //         latitude,
+  //         longitude
+  //         //  routeCoordinates: routeCoordinates.concat([newCoordinate]),
+  //         //  distanceTravelled:
+  //         //  distanceTravelled + this.calcDistance(newCoordinate),
+  //         //  prevLatLng: newCoordinate
+  //       });
+  //       console.log("new cords", this.state);
+  //     },
+  //     error => console.log(error),
+  //     { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
+  //   );
+  // }
   componentDidMount() {
     //get current position lat and long
-    // navigator.geolocation.getCurrentPosition(
-    //   position => {
-    //     console.log("get position", position);
-    //     this.setState({
-    //       region: {
-    //         latitude: position.coords.latitude,
-    //         longitude: position.coords.longitude,
-    //         latitudeDelta: 0.0922,
-    //         longitudeDelta: 0.0421
-    //       },
-    //       error: null
-    //     });
-    //     //Get address according to the lat and long.
-    //   },
-    //   error => this.setState({ error: error.message }),
-    //   { enableHighAccuracy: false, timeout: 200000, maximumAge: 1000 }
-    // );
-    this.watchID = navigator.geolocation.watchPosition(position => {
-      // Create the object to update this.state.mapRegion through the onRegionChange function
-      let region = {
-        latitude: position.coords.latitude,
-        longitude: position.coords.longitude,
-        latitudeDelta: 0.00922 * 1.5,
-        longitudeDelta: 0.00421 * 1.5
-      };
-      this.onRegionChange(region, region.latitude, region.longitude);
-    });
+    navigator.geolocation.getCurrentPosition(
+      position => {
+        console.log("get position", position);
+        this.setState({
+          region: {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421
+          },
+          error: null
+        });
+        //Get address according to the lat and long.
+        let pos = {
+          lat: this.state.region.latitude,
+          lng: this.state.region.longitude
+        };
+        Geocoder.geocodePosition(pos).then(res => {
+          this.setState({ startAddress: res[0].formattedAddress });
+        });
+        console.log("ADDRESS", this.state.startAddress);
+      },
+      error => this.setState({ error: error.message }),
+      { enableHighAccuracy: false, timeout: 200000, maximumAge: 1000 }
+    );
   }
-  onRegionChange = (region, lastLat, lastLong) => {
-    this.setState({
-      mapRegion: region,
-      // If there are no new values set the current ones
-      lastLat: lastLat || this.state.lastLat,
-      lastLong: lastLong || this.state.lastLong
-    });
-    //Get Address
-    let pos = {
-      lat: this.state.region.latitude,
-      lng: this.state.region.longitude
-    };
-    Geocoder.geocodePosition(pos).then(res => {
-      this.setState({ startAddress: res[0].formattedAddress });
-    });
-    console.log("ADDRESS:", this.state.startAddress);
-  };
-
   mapView = () => (
     <MapView
       style={styles.map}
@@ -96,13 +114,13 @@ export default class App extends Component {
       loadingIndicatorColor="red"
       fitToElements={true}
       initialRegion={this.state.region}
-      onRegionChange={this.onRegionChange}
+      onRegionChange={region => this.setState({ region: region })}
     >
       <MapView.Marker
         draggable
         coordinate={{
-          latitude: this.state.lastLat + 0.0005 || -36.82339,
-          longitude: this.state.lastLong + 0.0005 || -73.03569
+          longitude: this.state.region.longitude,
+          latitude: this.state.region.latitude
         }}
         onDragEnd={e => console.log(e.nativeEvent.coordinate)}
         pinColor="#000000"
